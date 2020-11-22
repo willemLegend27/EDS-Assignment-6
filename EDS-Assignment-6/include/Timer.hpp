@@ -10,6 +10,8 @@ public:
     Timer();
     ~Timer();
     static void Tick();
+    void EnableTimer();
+    void DisableTimer();
 
 private:
     void ConfigureInterrupt();

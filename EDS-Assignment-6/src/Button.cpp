@@ -1,5 +1,8 @@
 #include "Button.hpp"
+#include "Timer.hpp"
 #include "stm32f3xx_hal.h"
+
+bool triggeredEdge = false;
 
 Button::Button()
 {
@@ -14,6 +17,8 @@ Button::~Button()
 extern "C" void EXTI0_IRQHandler(void)
 {
     EXTI->PR |= EXTI_PR_PR0;
+
+    Button::TriggerButton();
 }
 
 void Button::ConfigureInput()
@@ -29,4 +34,27 @@ void Button::ConfigureInterrupt()
     EXTI->RTSR |= EXTI_RTSR_TR0;
     EXTI->IMR |= EXTI_IMR_MR0;
     NVIC_EnableIRQ(EXTI0_IRQn);
+}
+
+int Button::ReadButton()
+{
+    return GPIOC->IDR & GPIO_IDR_0;
+}
+
+void Button::TriggerButton()
+{
+    triggeredEdge = true;
+}
+
+bool Button::IsTriggered()
+{
+    if (triggeredEdge == true)
+    {
+        triggeredEdge = false;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

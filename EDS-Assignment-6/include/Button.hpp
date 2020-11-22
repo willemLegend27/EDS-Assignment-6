@@ -7,6 +7,9 @@ private:
 public:
     Button();
     ~Button();
+    static void TriggerButton();
+    static int ReadButton();
+    bool IsTriggered();
 
 private:
     void ConfigureInput();
