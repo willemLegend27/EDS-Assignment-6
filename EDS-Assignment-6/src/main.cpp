@@ -21,9 +21,13 @@
 #include "main.h"
 #include "Button.hpp"
 #include "Timer.hpp"
-#include <string.h>
 #include "EventGenerator.hpp"
 #include "FrequencyCounter.hpp"
+#include "Log.hpp"
+
+#include <stdexcept>
+#include <sstream>
+#include <string.h>
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -41,6 +45,7 @@ int main(void)
   SystemClock_Config();
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  //Log &log = *new Log(huart2);
   Button button1 = *new Button();
   Timer timer1 = *new Timer();
   EventGenerator &eventGenerator = *new EventGenerator(button1);
@@ -48,7 +53,11 @@ int main(void)
 
   while (1)
   {
-    frequencyCounter.Run();
+    static char msgBuf[80];
+
+    sprintf(msgBuf, "%s", "Hello World!\r\n");
+
+    HAL_UART_Transmit(&huart2, (uint8_t *)msgBuf, strlen(msgBuf), HAL_MAX_DELAY);
   }
 }
 

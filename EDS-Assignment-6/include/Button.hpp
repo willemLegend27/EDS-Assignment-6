@@ -8,7 +8,7 @@ public:
     Button();
     ~Button();
     static void TriggerButton();
-    static int ReadButton();
+    int ReadButton();
     bool IsTriggered();
 
 private:
