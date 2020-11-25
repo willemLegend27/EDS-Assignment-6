@@ -42,3 +42,13 @@ void Timer::DisableTimer()
     NVIC_DisableIRQ(TIM1_CC_IRQn);
     TIM1->DIER &= ~TIM_DIER_CC1IE;
 }
+
+int Timer::GetTimerTicks()
+{
+    return timer1Ticks;
+}
+
+void Timer::ResetTimerTicks()
+{
+    timer1Ticks = 0;
+}

@@ -4,7 +4,8 @@
 enum Events
 {
     NoEventOccured,
-    ButtonTriggered
+    ButtonTriggered,
+    UserButtonPressed
 };
 
 #endif

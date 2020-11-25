@@ -3,6 +3,7 @@
 #include "stm32f3xx_hal.h"
 
 bool triggeredEdge = false;
+int nrOfVibrations = 0;
 
 Button::Button()
 {
@@ -31,18 +32,15 @@ void Button::ConfigureInterrupt()
 {
     //PC0
     SYSCFG->EXTICR[0] = (SYSCFG->EXTICR[0] & ~SYSCFG_EXTICR1_EXTI0_PC) | (0b010 << SYSCFG_EXTICR1_EXTI0_Pos);
-    EXTI->RTSR |= EXTI_RTSR_TR0;
+    EXTI->RTSR |= EXTI_RTSR_TR0; //trigger on rising
+    EXTI->FTSR |= EXTI_FTSR_TR0; //trigger on falling
     EXTI->IMR |= EXTI_IMR_MR0;
     NVIC_EnableIRQ(EXTI0_IRQn);
 }
 
-int Button::ReadButton()
-{
-    return GPIOC->IDR & GPIO_IDR_0;
-}
-
 void Button::TriggerButton()
 {
+    nrOfVibrations += 1;
     triggeredEdge = true;
 }
 
@@ -57,4 +55,14 @@ bool Button::IsTriggered()
     {
         return false;
     }
+}
+
+int Button::GetNrOfVibrations()
+{
+    return nrOfVibrations;
+}
+
+void Button::ResetNrOfVibrations()
+{
+    nrOfVibrations = 0;
 }

@@ -25,95 +25,55 @@
 #include "Timer.hpp"
 #include "EventGenerator.hpp"
 #include "FrequencyCounter.hpp"
+#include "Log.hpp"
+#include "UserButton.hpp"
 #include <string.h>
 #include <vector>
+#include <sstream>
+#include "stdlib.h"
+#include <cstdio>
+#include <iostream>
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
 /**
   * @brief  The application entry point.
   * @retval int
   */
 
+void ShowMenu(Log *log)
+{
+  std::string option;
+  option = "Press 1 : Measure Period of signal";
+  log->Trace(option.c_str());
+}
+
+char GetUserInput(char oldChoice)
+{
+  char choice = '\0';
+  std::cin >> choice;
+  return choice;
+}
+
 int main(void)
 {
-
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  Log &log = *new Log(huart2);
   Button button1 = *new Button();
+  UserButton userButton = *new UserButton();
   Timer timer1 = *new Timer();
-  EventGenerator &eventGenerator = *new EventGenerator(button1);
-  FrequencyCounter frequencyCounter = *new FrequencyCounter(eventGenerator, timer1, button1);
+  EventGenerator &eventGenerator = *new EventGenerator(button1, userButton, log);
+  FrequencyCounter frequencyCounter = *new FrequencyCounter(eventGenerator, timer1, button1, log);
+  std::string message;
 
   while (1)
   {
-    static char msgBuf[80];
-
-    sprintf(msgBuf, "%s", "Hello World!\r\n");
-
-    HAL_UART_Transmit(&huart2, (uint8_t *)msgBuf, strlen(msgBuf), HAL_MAX_DELAY);
+    frequencyCounter.Run();
+    __WFI();
   }
+
   /* USER CODE END 3 */
 }
 

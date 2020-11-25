@@ -8,8 +8,9 @@ public:
     Button();
     ~Button();
     static void TriggerButton();
-    int ReadButton();
     bool IsTriggered();
+    int GetNrOfVibrations();
+    void ResetNrOfVibrations();
 
 private:
     void ConfigureInput();
