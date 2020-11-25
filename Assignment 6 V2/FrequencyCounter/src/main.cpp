@@ -40,18 +40,13 @@ void SystemClock_Config(void);
   * @retval int
   */
 
-void ShowMenu(Log *log)
+void InitWatchDog()
 {
-  std::string option;
-  option = "Press 1 : Measure Period of signal";
-  log->Trace(option.c_str());
-}
-
-char GetUserInput(char oldChoice)
-{
-  char choice = '\0';
-  std::cin >> choice;
-  return choice;
+  IWDG->KR = 0x5555; //access PR,RLR, WINR
+  IWDG->PR = 0b001;  //divider/8
+  IWDG->RLR = 12;    //reload reg
+  IWDG->KR = 0xAAAA; //reload wd
+  IWDG->KR = 0xCCCC; //start wd
 }
 
 int main(void)
@@ -66,12 +61,12 @@ int main(void)
   Timer timer1 = *new Timer();
   EventGenerator &eventGenerator = *new EventGenerator(button1, userButton, log);
   FrequencyCounter frequencyCounter = *new FrequencyCounter(eventGenerator, timer1, button1, log);
-  std::string message;
-
+  InitWatchDog();
   while (1)
   {
     frequencyCounter.Run();
     __WFI();
+    IWDG->KR = 0xAAAA; //reload wd
   }
 
   /* USER CODE END 3 */
