@@ -1,8 +1,6 @@
 #include "UserButton.hpp"
 #include "stm32f3xx_hal.h"
 
-bool userButtonPressed = false;
-
 UserButton::UserButton()
 {
     this->ConfigureInput();
