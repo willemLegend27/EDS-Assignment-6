@@ -27,12 +27,7 @@
 #include "FrequencyCounter.hpp"
 #include "Log.hpp"
 #include "UserButton.hpp"
-#include <string.h>
-#include <vector>
-#include <sstream>
-#include "stdlib.h"
-#include <cstdio>
-#include <iostream>
+#include <string>
 
 void SystemClock_Config(void);
 /**
@@ -42,11 +37,11 @@ void SystemClock_Config(void);
 
 void InitWatchDog()
 {
-  IWDG->KR = 0x5555; //access PR,RLR, WINR
-  IWDG->PR = 0b001;  //divider/8
-  IWDG->RLR = 12;    //reload reg
-  IWDG->KR = 0xAAAA; //reload wd
-  IWDG->KR = 0xCCCC; //start wd
+  IWDG->KR = 0x5555;  //access PR,RLR, WINR
+  IWDG->PR = 0x001;   //divider/8
+  IWDG->RLR = 0x0012; //reload reg
+  IWDG->KR = 0xAAAA;  //reload wd
+  IWDG->KR = 0xCCCC;  //start wd
 }
 
 int main(void)
@@ -61,11 +56,11 @@ int main(void)
   Timer timer1 = *new Timer();
   EventGenerator &eventGenerator = *new EventGenerator(button1, userButton, log);
   FrequencyCounter frequencyCounter = *new FrequencyCounter(eventGenerator, timer1, button1, log);
-  InitWatchDog();
+  //InitWatchDog(); //messes up terminal when called
   while (1)
   {
     frequencyCounter.Run();
-    __WFI();
+
     IWDG->KR = 0xAAAA; //reload wd
   }
 

@@ -18,6 +18,7 @@ void FrequencyCounter::HandleEvent(Events event)
     switch (currentState)
     {
     case STANDBY:
+        __WFI();
         if (event == UserButtonPressed)
         {
             currentState = MEASURE_PERIOD;
@@ -52,7 +53,7 @@ void FrequencyCounter::OutputState()
 
 void FrequencyCounter::HandleMeasureFrequency(Events event)
 {
-    if (event == ButtonTriggered)
+    if (event == MeasureButtonTriggered)
     {
         if (timer1.GetTimerTicks() == 0)
         {
@@ -69,7 +70,7 @@ void FrequencyCounter::HandleMeasureFrequency(Events event)
 
 void FrequencyCounter::HandleMeasurePeriod(Events event)
 {
-    if (event == ButtonTriggered)
+    if (event == MeasureButtonTriggered)
     {
         if (timer1.GetTimerTicks() == 0)
         {
@@ -77,7 +78,7 @@ void FrequencyCounter::HandleMeasurePeriod(Events event)
         }
         else if (timer1.GetTimerTicks() > 0)
         {
-            double period = MeaurePeriod();
+            int period = MeaurePeriod();
             PrintPeriodOutput(period);
             ResetState();
         }
@@ -93,13 +94,13 @@ void FrequencyCounter::ResetState()
     OutputState();
 }
 
-void FrequencyCounter::PrintPeriodOutput(double period)
+void FrequencyCounter::PrintPeriodOutput(int period)
 {
     std::string msg = "Period of signal : " + std::to_string(period) + " ms\r\n";
     log.Trace(msg.c_str());
 }
 
-double FrequencyCounter::MeaurePeriod()
+int FrequencyCounter::MeaurePeriod()
 {
     return timer1.GetTimerTicks();
 }

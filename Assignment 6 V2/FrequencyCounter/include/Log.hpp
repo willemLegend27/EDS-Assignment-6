@@ -11,9 +11,6 @@ private:
 
 public:
     Log(UART_HandleTypeDef &huart);
-    Log(Log const &) = delete;
-    void operator=(Log const &) = delete;
-
     virtual void Trace(const char *fmt);
 
 private:

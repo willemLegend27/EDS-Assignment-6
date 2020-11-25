@@ -26,8 +26,8 @@ private:
     void HandleMeasurePeriod(Events event);
     double MeaureFrequency();
     void PrintFrequencyOutput(double frequency);
-    double MeaurePeriod();
-    void PrintPeriodOutput(double period);
+    int MeaurePeriod();
+    void PrintPeriodOutput(int period);
     void ResetState();
     void OutputState();
 };

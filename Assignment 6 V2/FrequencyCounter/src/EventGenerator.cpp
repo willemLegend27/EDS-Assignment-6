@@ -24,7 +24,7 @@ void EventGenerator::HandlePollEvents()
 {
     if (button1.IsTriggered())
     {
-        PushEvent(Events::ButtonTriggered);
+        PushEvent(Events::MeasureButtonTriggered);
     }
     if (userButton.ReadButton() == 0)
     {

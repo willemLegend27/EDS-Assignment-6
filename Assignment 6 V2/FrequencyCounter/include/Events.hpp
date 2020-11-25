@@ -4,7 +4,7 @@
 enum Events
 {
     NoEventOccured,
-    ButtonTriggered,
+    MeasureButtonTriggered,
     UserButtonPressed
 };
 
